@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Storybooks - Main</title>
+</head>
+<body>
+    <nav class="grey darken-3">
+        <div class="nav-wrapper container">
+
+            <a href="#!" class="brand-logo center">StoryBooks</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger show-on-large"><i class="fas fa-bars"></i></a>
+            <ul class="sidenav" id="mobile-demo">
+                <li><a href="/stories">Public Stories</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="fixed-action-btn">
+        <a href="/stories/add" class="btn-floating btn-large waves-effect waves-light red"><i class="fas fa-plus"></i></a>
+    </div>
+    <div class="container">
+        <h6>main.ejs (dashboard)</h6>
+        <h3>Welcome <%= name %></h3>
+        <p>Here are your stories</p>
+        <% if(stories.length>0){ %>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- could not figure out forEach loop -->
+                    <% for (let i = 0; i < stories.length; i++) { %>
+                        <tr>
+                            <td><a href="/stories/<%= stories[i]._id %>"><%= stories[i].title %></a></td>
+                            <!-- see momentjs documentation for other formats-->
+                            <!-- using app.js's locals -->
+                            <td><%= formatDate(stories[i].createdAt, 'MMMM Do YYYY, h:mm:ss a') %></td>
+                            <td><span class="dash-status"><%= stories[i].status %></span></td>
+                            <td>
+                                <!-- btn-float not materialize class (use local style.css) -->
+                                <a href="/stories/edit/<%= stories[i]._id %>" class="btn btn-float">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="/stories/<%= stories[i]._id %>" method="POST" id="delete-form">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn red">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>You have not created any stories</p>
+        <% } %>
+    </div>
+
+    <!-- materialize -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- ckeditor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.19.1/ckeditor.js" integrity="sha512-Ooi9IbjM2SIDjQ02ENbPFuuORT8F8Rc+rowcYfLneDwKRxw1+gVVj5tciVmV/APnA/Ys+qy1MbNKK3k2EaAHcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        M.Sidenav.init(document.querySelector('.sidenav'))
+    </script>
+</body>
+</html>
